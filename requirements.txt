@@ -2,3 +2,7 @@ sqlalchemy
 webdriver_manager
 selenium
 requests
+boto3
+bs4
+lxml
+docker

@@ -17,7 +17,7 @@ This command specifically targets the airflow-init service within the docker-com
 Once the database is initialized, you can proceed to start all the services, including the webserver, scheduler, and any other services defined in your docker-compose.dev.yaml file:
 
 ```bash
-$ $ docker-compose up -f docker-compose.dev.yaml up
+$ docker-compose up -f docker-compose.dev.yaml up
 ```
 
 After executing this command, your Airflow services should be up and running. You can then access the Airflow web interface via your browser.
@@ -26,11 +26,11 @@ After executing this command, your Airflow services should be up and running. Yo
 
 The Dockerfile is built upon the official Apache Airflow image version 2.7.1. It customizes the base image by adding the following:
 
-1. Google Chrome Installation:
+1. Firefox Installation:
 
-- It first retrieves Google's signing key and adds it to the list of trusted keys.
-- Then, it adds Google's official repository to the APT sources list.
-- After updating the package database with apt-get update, it installs the stable version of Google Chrome.
+- It first retrieves Firefox's signing key and adds it to the list of trusted keys.
+- Then, it adds Firefox's official repository to the APT sources list.
+- After updating the package database with apt-get update, it installs the stable version of Firefox with the geckodriver.
 - As a cleanup step, it removes unnecessary files and directories related to package lists and the installation process.
 
 2. Additional Python Dependencies:

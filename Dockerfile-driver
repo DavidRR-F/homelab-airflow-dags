@@ -1,0 +1,23 @@
+# Use an official Python runtime as the base image
+FROM python:3.9-slim-buster
+
+# Set environment variables to non-interactive (this prevents some prompts)
+ENV DEBIAN_FRONTEND=non-interactive
+
+# Install Firefox and other necessary dependencies
+RUN apt update && apt install -y wget curl firefox-esr jq
+
+# Fetch the latest Geckodriver version and download
+RUN GECKODRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | jq -r .tag_name | tr -d 'v') && \
+    wget --no-verbose -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz && \
+    tar -C /opt -zxf /tmp/geckodriver.tar.gz && \
+    rm /tmp/geckodriver.tar.gz && \
+    mv /opt/geckodriver /opt/geckodriver-$GECKODRIVER_VERSION && \
+    chmod 755 /opt/geckodriver-$GECKODRIVER_VERSION && \
+    ln -fs /opt/geckodriver-$GECKODRIVER_VERSION /usr/bin/geckodriver
+
+# Expose port for communicating with geckodriver
+EXPOSE 4444
+
+# Start geckodriver
+CMD ["geckodriver", "--host", "0.0.0.0", "--port", "4444", "--allow-hosts", "remote_driver"]

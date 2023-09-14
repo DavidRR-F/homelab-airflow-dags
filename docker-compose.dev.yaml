@@ -297,5 +297,14 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
+  web_driver:
+    container_name: remote_driver
+    build:
+      context: .
+      dockerfile: Dockerfile-driver
+    ports:
+      - 4444:4444
+    restart: always
+
 volumes:
   postgres-db-volume:
