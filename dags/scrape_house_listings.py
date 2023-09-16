@@ -129,6 +129,7 @@ with DAG(
     schedule_interval="@monthly",
     catchup=False,
 ) as dag:
+    prev_task = None
     base_url = Variable.get("house_listing_url")
     for location in Variable.get("house_listing_locations").split(","):
         for size in Variable.get("house_listing_sizes").split(","):
