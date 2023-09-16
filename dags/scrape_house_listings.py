@@ -129,7 +129,6 @@ with DAG(
     schedule_interval="@monthly",
     catchup=False,
 ) as dag:
-    scraper_tasks = []
     base_url = Variable.get("house_listing_url")
     for location in Variable.get("house_listing_locations").split(","):
         for size in Variable.get("house_listing_sizes").split(","):
@@ -143,6 +142,7 @@ with DAG(
                 provide_context=True,
             )
 
-            scraper_tasks.append(scrape_task)
+            if prev_task:
+                prev_task >> scrape_task
 
-    scraper_tasks
+            prev_task = scrape_task
