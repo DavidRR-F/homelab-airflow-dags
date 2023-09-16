@@ -241,7 +241,7 @@ services:
     networks:
       - postgres_default
 
-  web_driver:
+  remote_driver:
     container_name: remote_driver
     build:
       context: .
