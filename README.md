@@ -1,8 +1,10 @@
-# Homelab Apache Airflow Configuration
+# Homelab Apache Airflow Configuration (w/Firefox Driver for Scraping)
+
+![Alt text](image.png)
 
 ## Setup
 
-1. Initialize the Airflow Database
+### Initialize the Airflow Database
 
 Before starting the Airflow services, it's necessary to initialize its database. You can do this by running the following command:
 
@@ -12,7 +14,7 @@ $ docker-compose up -f docker-compose.dev.yaml up airflow-init
 
 This command specifically targets the airflow-init service within the docker-compose.dev.yaml file, which is responsible for initializing the database.
 
-2. Start Airflow Services
+### Start Airflow Services
 
 Once the database is initialized, you can proceed to start all the services, including the webserver, scheduler, and any other services defined in your docker-compose.dev.yaml file:
 
@@ -22,16 +24,26 @@ $ docker-compose up -f docker-compose.dev.yaml up
 
 After executing this command, your Airflow services should be up and running. You can then access the Airflow web interface via your browser.
 
+**Note**: the docker-compose.prod.yaml is the same but the configuration works with a already existing Postgresql DB running in a docker container, all you have to do is update the default docker network and connection strings with your own
+
 ## Custom Configuration
 
 The Dockerfile is built upon the official Apache Airflow image version 2.7.1. It customizes the base image by adding the following:
 
 1. Firefox Installation:
 
-- It first retrieves Firefox's signing key and adds it to the list of trusted keys.
-- Then, it adds Firefox's official repository to the APT sources list.
-- After updating the package database with apt-get update, it installs the stable version of Firefox with the geckodriver.
-- As a cleanup step, it removes unnecessary files and directories related to package lists and the installation process.
+- The Dockerfile-driver creates a image for creating a container w/ Firefox and the Geckodriver
+- This allows the Airflow DAGs to use this container as a brower for web scraping with Selenium
+
+  **Note**: The Dockerfile is grabing the aarch-64 version of the driver which works with arm64v8 architecture so if you are using a different architecture update the Dockerfile
+
+  ```
+  $GECKODRIVER_VERSION-linux-aarch64.tar.gz
+  ```
+
+  ### Benefits over Selenium Grid
+
+  Selenium Grid can't properly render map elements making some web scraping not possible with it but this configureation will allow you to interact with those elements
 
 2. Additional Python Dependencies:
 
